@@ -14,7 +14,9 @@
                         prod_discount,
                         prod_purchase_yn,
                         prod_content,
-                        prod_comment) 
+                        prod_comment,
+                        prod_category
+                        ) 
         values (#{prod_enddate},
               #{prod_writer},
               #{prod_name},
@@ -23,7 +25,8 @@
               #{prod_discount},
               #{prod_purchase_yn},
               #{prod_content},
-              #{prod_comment}
+              #{prod_comment},
+              #{prod_category}
         )
      </insert>
      <!-- 
@@ -32,7 +35,21 @@
       -->
      <select id="getList" resultType="ProductVO">
         select * 
-        from product 
+        from product a
+        left join (
+           SELECT CONCAT(A1.group_ID, A1.CATEGORY_ID) AS CATEGORY_KEY, ##카테고리 키 (그룹 + 키 형태로 카테고리분류)
+          CASE A1.category_parent_LV
+          WHEN 0 THEN A1.category_detail_NM
+         WHEN 1 THEN CONCAT(A2.category_detail_NM,' > ', A1.category_detail_NM)
+         WHEN 2 THEN CONCAT(A3.category_detail_NM, ' > ', A2.category_detail_NM,' > ', A1.category_detail_NM)
+         END as CATEGORY_NAV
+         FROM PRODUCT_CATEGORY A1
+         LEFT OUTER JOIN PRODUCT_CATEGORY A2
+         ON A1.CATEGORY_PARENT_LV = A2.CATEGORY_LV AND A1.CATEGORY_DETAIL_PARENT_LV = A2.CATEGORY_DETAIL_LV AND A1.GROUP_ID = A2.GROUP_ID
+         LEFT OUTER JOIN PRODUCT_CATEGORY A3
+         ON A2.CATEGORY_PARENT_LV = A3.CATEGORY_LV AND A2.CATEGORY_DETAIL_PARENT_LV = A3.CATEGORY_DETAIL_LV
+        ) b
+        on a.prod_category = b.category_key
         where prod_writer=#{writer}
         <if test="cri.searchName != '' and cri.searchName!=null">
         and prod_name like concat('%',#{cri.searchName},'%')
@@ -75,7 +92,22 @@
      </select>
      
      <select id = "getDetail" resultType="ProductVO">
-        select * from product where prod_id = #{prod_id}
+        select * from product  a
+        left join (
+           SELECT CONCAT(A1.group_ID, A1.CATEGORY_ID) AS CATEGORY_KEY, ##카테고리 키 (그룹 + 키 형태로 카테고리분류)
+          CASE A1.category_parent_LV
+          WHEN 0 THEN A1.category_detail_NM
+         WHEN 1 THEN CONCAT(A2.category_detail_NM,' > ', A1.category_detail_NM)
+         WHEN 2 THEN CONCAT(A3.category_detail_NM, ' > ', A2.category_detail_NM,' > ', A1.category_detail_NM)
+         END as CATEGORY_NAV
+         FROM PRODUCT_CATEGORY A1
+         LEFT OUTER JOIN PRODUCT_CATEGORY A2
+         ON A1.CATEGORY_PARENT_LV = A2.CATEGORY_LV AND A1.CATEGORY_DETAIL_PARENT_LV = A2.CATEGORY_DETAIL_LV AND A1.GROUP_ID = A2.GROUP_ID
+         LEFT OUTER JOIN PRODUCT_CATEGORY A3
+         ON A2.CATEGORY_PARENT_LV = A3.CATEGORY_LV AND A2.CATEGORY_DETAIL_PARENT_LV = A3.CATEGORY_DETAIL_LV
+        ) b
+        on a.prod_category = b.category_key
+        where prod_id = #{prod_id}
      </select>
   
      <update id="productUpdate" >
@@ -94,11 +126,19 @@
         delete from product where prod_id = #{prod_id}
      </delete>
      
+     <select id="getCategory" resultType="CategoryVO">
+        select * from product_category where category_lv = 1
+     </select>
      
-     <insert id="topicRegist">
-        insert into topic (topic_id,topic_title,topic_content)
-        values (#{topic_id},#{topic_title},#{topic_content})
-     </insert>
+     <select id="getCategoryChild">
+        select *
+        from product_category
+        where group_id = #{group_id}
+        and category_parent_lv = #{category_lv}
+        and category_detail_parent_lv = #{category_detail_lv}
+     </select>
+     
+     
   
   
   </mapper>

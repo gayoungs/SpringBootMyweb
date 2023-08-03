@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.coding404.myweb.command.CategoryVO;
 import com.coding404.myweb.command.ProductVO;
 
 import com.coding404.myweb.util.Criteria;
@@ -19,4 +20,7 @@ public interface ProductMapper {
    public int productUpdate(ProductVO vo); //수정
    public int productDelete(int prod_id);
    
+   //카테고리처리
+   public ArrayList<CategoryVO> getCategory();
+   public ArrayList<CategoryVO> getCategoryChild(CategoryVO vo);//2단 3단 가져올때
 }
