@@ -102,22 +102,20 @@ function getCategory_List(e) {
 		console.log('1lv');
 		$().loading(); //로딩
 		$(e.currentTarget).category_remove(); //이전 카테고리삭제
-		
-		
-		//////////////2023.08.03 수업/////////////////////
+
 		//console.log(obj);
 		
 		$.ajax({
-			url: '../getCategoryChild/' + obj.group_id + "/" + obj.category_lv + "/" + obj.category_detail_lv,
+			url: '../getCategoryChild/' + obj.group_id + '/' + obj.category_lv + '/' + obj.category_detail_lv,
 			type: 'get',
-			//data: //필요없음
 			success: function(data) {
-				//console.log(data);
+				console.log(data);
 				category_create(data);
 			},
-			error : function(status, err) {
-				alert('카테고리 조회에 실패했습니다. 관리자에게 문의해주세요');
+			error: function(status, err) {
+				alert('카테고리 조회에 실패했습니다. 관리자에게 문의해주세요')
 			}
+			
 		})
 		
 		//////////////////////////////////////////////////
@@ -126,9 +124,9 @@ function getCategory_List(e) {
 		//category_create(); //다음 카테고리생성
 		//////////////////////////////////////////////////
 
+		
 	} 
 	
-	//category_set();
 	$(e.target).category_set(); //히든태그에 값을 저장
 	
 }
@@ -146,16 +144,15 @@ $.fn.category_remove = function() {
 }
 //다음카테고리 생성JS
 function category_create(data) {
-	
-	
+
 	//예시데이터
 	/*
 	var data = [
 	 {category_lv: 2, group_id: 'B', category_detail_nm: '값선택', category_detail_parent_nm: '값선택'},
 	 {category_lv: 2, group_id: 'B', category_detail_nm: '값선택', category_detail_parent_nm: '값선택'},
 	 {category_lv: 2, group_id: 'B', category_detail_nm: '값선택', category_detail_parent_nm: '값선택'}
-  ];
-  */
+  	];
+  	*/
 
 	var category = "";
 	category += '<ul class="categoryList" style="position: relative;" onclick="getCategory_List(event);" >';

@@ -23,103 +23,117 @@ import com.coding404.myweb.util.PageVO;
 @Controller
 @RequestMapping("/product")
 public class ProductController {
-   
-   @Autowired
-   @Qualifier("productService")
-   private ProductService productService;
-   
-   @GetMapping("/productList")
-   public String list(Model model,Criteria cri) {
-      
-      //로그인 기능이 없으므로, admin이라는 계정기반으로 조회
-      String writer = "admin";
-//      ArrayList<ProductVO> list = productService.getList(writer);
-//      model.addAttribute("list", list);
-      ArrayList<ProductVO> list = productService.getList(writer,cri);
-      
-      int total = productService.getTotal(writer,cri);
-      PageVO pageVO = new PageVO(cri,total);
-      
-      model.addAttribute("list", list);
-      model.addAttribute("pageVO", pageVO);
-      System.out.println(pageVO.toString());
-      return "product/productList";
-   } 
-   
-   @GetMapping("/productReg")
-   public String reg() {
-      return "product/productReg";
-   } 
-   
-   
-   @GetMapping("/productDetail")
-   public String detail(@RequestParam("prod_id") int prod_id,
-                    Model model) {
-      
-      //조회 ~ prod_id가 필요
-      ProductVO vo = productService.getDetail(prod_id);
-      model.addAttribute("vo", vo);
-      return "product/productDetail";
-   } 
-   
-   //post방식
-   //등록요청
-   @PostMapping("/registForm")
-   public String registForm(ProductVO vo, RedirectAttributes ra,
-		   					@RequestParam("file") List<MultipartFile> list //업로드
-		   					) {
-	   
-	   //1. 빈객체검사
-	   list = list.stream().filter( t -> t.isEmpty() == false ).collect(Collectors.toList());
-      
-	   //2.확장자검사
-	   for( MultipartFile file : list ) {
-		   //System.out.println(file.getContentType());
-		   //file.getCintentType();
-		   
-		   if(file.getContentType().contains("image")==false) {
-			   ra.addFlashAttribute("msg","jpg,jpeg,png 이미지 파일만 등록이 가능합니다");
-			   return "redirect:/product/productList"; //이미지가 아니라면 list목록으로
-		   }
-	   }
-	   
-	   //3. 파일을 처리하는 작업은 service위임 => 애시당초에  controller Request 객체를 받고 service 위임전략
-	   
-	   
-	   
-//	   System.out.println(vo.toString());
-	   
-      int result = productService.productRegist(vo,list);
-      String msg = result == 1 ? "등록 되었습니다" : "등록 실패";
-      ra.addFlashAttribute("msg",msg);
-      
-      return "redirect:/product/productList";
-   }
-   
-   @PostMapping("/modifyForm")
-   public String modifyForm(ProductVO vo, RedirectAttributes ra) {
-      int result = productService.productUpdate(vo);
-      System.out.println(result);
-      String msg = result==1? "업데이트 성공하셨어요 고갱님" : "업데이트 실패하셨어요 고갱님";
-      ra.addFlashAttribute("msg2", msg);
-      return "redirect:/product/productList";
-   }
-   
-   
-   @PostMapping("/deleteForm")
-   public String deleteForm(ProductVO vo, RedirectAttributes ra) {
-      int result = productService.productDelete(vo.getProd_id());
-      String msg = result==1?"삭제 성공":"삭제 실패";
-      ra.addFlashAttribute("msg3", msg);
-      return "redirect:/product/productList";
-   }
-   
-   
-   
-   
-   
-   
-   
-   
-   
+	
+	@Autowired
+	@Qualifier("productService")
+	private ProductService productService;
+	
+	
+	
+	@GetMapping("/productList")
+	public String list(Model model, Criteria cri) {
+		
+		//로그인 기능이 없으므로, admin이라는 계정기반으로 조회
+		String writer = "admin";
+		
+		//1st
+		//ArrayList<ProductVO> list = productService.getList(writer);
+		//model.addAttribute("list", list);
+		
+		//2nd
+		ArrayList<ProductVO> list = productService.getList(writer, cri);
+		
+		int total = productService.getTotal(writer, cri);
+		PageVO pageVO = new PageVO(cri, total);
+
+		model.addAttribute("list", list);
+		model.addAttribute("pageVO", pageVO);
+		
+		System.out.println(pageVO.toString());
+		
+		return "product/productList";
+	}
+	
+	@GetMapping("/productReg")
+	public String reg() {
+		return "product/productReg";
+	}
+	
+	@GetMapping("/productDetail")
+	public String detail(@RequestParam("prod_id") int prod_id,
+						 Model model) {
+		
+		//조회~ prod_id가 필요
+		ProductVO vo = productService.getDetail(prod_id);
+		
+		model.addAttribute("vo", vo);
+		
+		return "product/productDetail";
+	}
+	
+	//post방식
+	//등록요청
+	@PostMapping("/registForm")
+	public String registForm(ProductVO vo, RedirectAttributes ra,
+							 @RequestParam("file") List<MultipartFile> list //업로드
+							 ) {
+		
+		//1. 비어있는 객체검사
+		list = list.stream().filter( t -> t.isEmpty() == false).collect( Collectors.toList() );
+		//2. 확장자검사
+		for(MultipartFile file : list) {
+			System.out.println( file.getContentType() ); //출력:image/png
+			if(file.getContentType().contains("image") == false) {
+				ra.addFlashAttribute("msg", "jpg, jpeg, png 이미지 파일만 등록이 가능합니다.");
+				return "redirect:/product/productList"; //이미지가 아니라면 list 목록으로
+			}
+		}
+		
+		//3. 파일을 처리하는 작업은 service로 위임 => 애시당초에 controller Request객체를 받고 service위임전략.
+		
+		//System.out.println(vo.toString());
+		int result = productService.productRegist(vo, list);//1이면 성공, 0이면 실패
+		String msg = result == 1 ? "등록 되었습니다" : "등록 실패. 관리자에게 문의하세요";
+		ra.addFlashAttribute("msg", msg );
+		
+		return "redirect:/product/productList";
+	}
+	
+	//post요청
+	//수정요청
+	@PostMapping("/modifyForm")
+	public String modifyForm(ProductVO vo, RedirectAttributes ra) {
+		System.out.println(vo);
+		
+		int result = productService.productUpdate(vo); //1이면 성공, 0이면 실패
+		String msg = result == 1 ? "수정 되었습니다" : "수정 실패";
+		
+		ra.addFlashAttribute("msg", msg);
+		
+		return "redirect:/product/productList";
+	}
+	
+	
+	//삭제
+	@PostMapping("/deleteForm")
+	public String deleteForm(@RequestParam("prod_id") int prod_id, RedirectAttributes ra) {
+		
+		productService.productDelete(prod_id);
+		
+		return "redirect:/product/productList";
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

@@ -9,7 +9,6 @@
             <div class="right_content">
                 <div class="midiaq">
                     <div class="page_title">상품 관리 > <span class="page_subtitle">상품 상세/수정</span></div>
-                    
                     <form name="actionForm" action="####" method="post">
                         <div class="full_collum collum">
                             <ul>
@@ -44,7 +43,7 @@
                                                     </tr>
                                                     <tr>
                                                         <th scope="row">제목(상품명)</th>
-                                                        <td><input class="inputw99p margin_center" type="text" name="prod_name" th:value="${vo.prod_name}" required>
+                                                        <td><input class="inputw99p margin_center" type="text" name="prod_name" th:value="${vo.prod_name}" readonly>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -168,15 +167,17 @@
     </div>
   
 	</th:block>
-
+	
 	
 	<script>
 		//수정기능
-		let modifyBtn = document.getElementById("modifyBtn");
+		var modifyBtn = document.getElementById("modifyBtn");
 		modifyBtn.onclick = () => {
 			
 			//이벤트 a에 걸려있음
 			event.preventDefault();
+			
+			console.log(document.actionForm);
 			
 			document.actionForm.action = "modifyForm"; //action변경
 			document.actionForm.submit(); //서브밋
@@ -184,17 +185,27 @@
 		}
 		
 		//삭제기능
-		let deleteBtn = document.getElementById("deleteBtn");
+		var deleteBtn = document.getElementById("deleteBtn");
 		deleteBtn.onclick = () => {
 			event.preventDefault();
 			
-			document.actionForm.action = "deleteForm"; //action변경
+			document.actionForm.action="deleteForm"; //action변경
 			document.actionForm.submit();
-			
 		}
 		
-		 
-		
 	</script>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 </html>

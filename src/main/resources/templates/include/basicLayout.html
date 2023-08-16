@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
-<th:block th:fragment="setContent(content)">	
+	
+<th:block th:fragment="setContent(content)">
+<html>
 <head>
 
 	<title>판매자 매니저</title>
@@ -20,9 +21,10 @@
 	<script th:src="@{/js/jquery-1.12.1.min.js}"></script>
 	<script th:src="@{/js/jquery-ui.min.js}"></script>
 	<script th:src="@{/js/style.js}"></script>
-
-	<!--모달css-->
+	
+	<!--모달 css -->
 	<link rel="stylesheet" type="text/css" th:href="@{/css/modal.css}" />
+	
 
 
 </head>
@@ -30,11 +32,13 @@
 	
 	<header class="wrap">
 		<div class="header">
-			<h3 style="color: #fff; position: absolute; left: 20px; top: 27px;">coding404 - 연습용 입니다. 이에 대한 무단 복제 및 배포를 원칙적으로 금합니다.
-				원본파일 및 핸드폰 촬영, 동영상강좌 녹화를 통한 무단 복제 · 배포하는 경우 저작권법 제136조에 의한 저작재산권 침해 죄에 해당될 수 있으니 각별한 주의 바랍니다.</h3>
-			<span class="admin_id"><b style="color:#7866c9;">관리자</b>홍길동 님</span>
+				<h3 style="color: #fff; position: absolute; left: 20px; top: 27px;">coding404 - 연습용 입니다. 이에 대한 무단 복제 및 배포를 원칙적으로 금합니다.
+						원본파일 및 핸드폰 촬영, 동영상강좌 녹화를 통한 무단 복제 · 배포하는 경우 저작권법 제136조에 의한 저작재산권 침해 죄에 해당될 수 있으니 각별한 주의 바랍니다.</h3>
+				<span class="admin_id"><b style="color:#7866c9;">관리자</b>홍길동 님</span>
 		</div>
+
 	</header>
+	
 	
 	<!-- 좌측 사이드바 -->
     <aside>
@@ -74,11 +78,13 @@
             </li>
         </ul>
     </aside>
-	
-	
-	<div th:replace="${content}">
+    
+    
+    
+    <div th:replace="${content}">
 		
 	</div>
+	
 	
 	
 	<footer id="footer">
@@ -125,13 +131,13 @@
 		
 				</div>
 		</div>
-	</footer>	
+	</footer>		
+    
 	
-	
-	
+		
+
 </body>
 </th:block>
-
 
 
 

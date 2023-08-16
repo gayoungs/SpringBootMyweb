@@ -11,13 +11,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class ProductUploadVO {
-	
-	private Integer upload_no;//pk
-	private String filename; //실제파일명
-	private String filepath;//폴더명
-	private String uuid;//난수값
-	private LocalDateTime regdate;
-	private Integer prod_id;//fk
-	private String prod_writer;//fk
 
+	private int upload_no; //pk
+	private String filename; //실제파일명
+	private String filepath; //폴더명
+	private String uuid; //난수값
+	private LocalDateTime regdate;
+	private Integer prod_id; //fk
+	private String prod_writer; //fk
 }

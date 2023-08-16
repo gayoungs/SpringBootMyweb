@@ -26,5 +26,4 @@ public class ProductVO {
 	private String prod_comment;
 	//join결과
 	private String category_nav;
-	
 }
