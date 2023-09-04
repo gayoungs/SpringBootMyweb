@@ -45,11 +45,12 @@ public class ProductController {
 		
 		int total = productService.getTotal(writer, cri);
 		PageVO pageVO = new PageVO(cri, total);
-
+		
 		model.addAttribute("list", list);
 		model.addAttribute("pageVO", pageVO);
-		
+
 		System.out.println(pageVO.toString());
+		
 		
 		return "product/productList";
 	}
@@ -78,23 +79,25 @@ public class ProductController {
 							 @RequestParam("file") List<MultipartFile> list //업로드
 							 ) {
 		
-		//1. 비어있는 객체검사
-		list = list.stream().filter( t -> t.isEmpty() == false).collect( Collectors.toList() );
+		//1. 빈객체검사
+		list = list.stream().filter( t -> t.isEmpty() == false).collect( Collectors.toList());
+				
 		//2. 확장자검사
-		for(MultipartFile file : list) {
-			System.out.println( file.getContentType() ); //출력:image/png
+		for(MultipartFile file : list ) {
 			if(file.getContentType().contains("image") == false) {
-				ra.addFlashAttribute("msg", "jpg, jpeg, png 이미지 파일만 등록이 가능합니다.");
-				return "redirect:/product/productList"; //이미지가 아니라면 list 목록으로
+				ra.addFlashAttribute("msg", "jpg, jpeg, png 이미지 파일만 등록이 가능합니다");
+				return "redirect:/product/productList"; //이미지가 아니라면 list목록으로
 			}
+			
 		}
+		//3. 파일을 처리하는 작업은 service위임 => 애시당초에 controller Request객체를 받고 service위임전략.
 		
-		//3. 파일을 처리하는 작업은 service로 위임 => 애시당초에 controller Request객체를 받고 service위임전략.
-		
-		//System.out.println(vo.toString());
-		int result = productService.productRegist(vo, list);//1이면 성공, 0이면 실패
+		int result = productService.productRegist(vo, list);
 		String msg = result == 1 ? "등록 되었습니다" : "등록 실패. 관리자에게 문의하세요";
+		
 		ra.addFlashAttribute("msg", msg );
+		
+		
 		
 		return "redirect:/product/productList";
 	}
@@ -103,25 +106,28 @@ public class ProductController {
 	//수정요청
 	@PostMapping("/modifyForm")
 	public String modifyForm(ProductVO vo, RedirectAttributes ra) {
-		System.out.println(vo);
-		
-		int result = productService.productUpdate(vo); //1이면 성공, 0이면 실패
-		String msg = result == 1 ? "수정 되었습니다" : "수정 실패";
-		
+		//메서드명 = productUpdate()
+		//데이터베이스에 업데이트 작업을 진행
+		//업데이트된 결과를 반환받아서 list화면으로,
+		//"업데이트성공" 메시지를 띄워주세요.
+		int result = productService.productUpdate(vo);
+		String msg = result == 1 ? "정상적으로 처리되었습니다" : "수정 실패. 관리자에게 문의하세요";		
 		ra.addFlashAttribute("msg", msg);
 		
 		return "redirect:/product/productList";
 	}
 	
-	
-	//삭제
+	//post요청
+	//삭제요청
 	@PostMapping("/deleteForm")
-	public String deleteForm(@RequestParam("prod_id") int prod_id, RedirectAttributes ra) {
+	public String deleteForm(@RequestParam("prod_id") int prod_id) {
 		
 		productService.productDelete(prod_id);
 		
 		return "redirect:/product/productList";
 	}
+	
+	
 	
 	
 	

@@ -6,8 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class CategoryVO {
 	
@@ -21,7 +21,7 @@ public class CategoryVO {
 //		    CATEGORY_PARENT_LV INT , ##1,2,3에 대한 부모컬럼
 //		    CATEGORY_DETAIL_PARENT_LV INT ##ORDER순서에 대한 부모컬럼
 //	);
-
+	
 	private Integer category_id;
 	private String group_id;
 	private Integer category_lv;
@@ -30,4 +30,8 @@ public class CategoryVO {
 	private String category_detail_nm;
 	private Integer category_parent_lv;
 	private Integer category_detail_parent_lv;
+	
+	
+	
+	
 }
